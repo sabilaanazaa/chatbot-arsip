@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArsipBot Nganjuk - Layanan Kearsipan Kabupaten Nganjuk</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #0a4f8a;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.5em;
+        }
+        
+        .header p {
+            margin: 5px 0 0;
+            font-size: 0.9em;
+        }
+        
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .chat-box {
+            height: 400px;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #e9f2fa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            max-width: 70%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+        }
+        
+        .bot-message {
+            background-color: white;
+            color: #333;
+            border-top-left-radius: 0;
+            align-self: flex-start;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .user-message {
+            background-color: #0a4f8a;
+            color: white;
+            border-top-right-radius: 0;
+            margin-left: auto;
+            align-self: flex-end;
+        }
+        
+        .input-area {
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+        
+        #user-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            outline: none;
+            font-size: 16px;
+        }
+        
+        #send-button {
+            background-color: #0a4f8a;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quick-reply {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 10px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+        
+        .quick-reply-btn {
+            background-color: #e9f2fa;
+            border: 1px solid #0a4f8a;
+            color: #0a4f8a;
+            border-radius: 20px;
+            padding: 5px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .quick-reply-btn:hover {
+            background-color: #0a4f8a;
+            color: white;
+        }
+        
+        .info-text {
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        
+        .logo {
+            height: 40px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            padding: 10px 15px;
+            background-color: white;
+            border-radius: 18px;
+            border-top-left-radius: 0;
+            width: fit-content;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #666;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Coat_of_arms_of_Nganjuk.png/1200px-Coat_of_arms_of_Nganjuk.png" alt="Lambang Nganjuk" class="logo">ArsipBot Nganjuk</h1>
+        <p>Layanan Chatbot Kearsipan Kabupaten Nganjuk</p>
+    </div>
+    
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <div class="message bot-message">
+                Selamat datang di ArsipBot Nganjuk! Saya siap membantu Anda dengan informasi dan layanan kearsipan di Kabupaten Nganjuk. 
+                <br><br>Anda dapat menanyakan tentang:
+                <ul>
+                    <li>Layanan kearsipan</li>
+                    <li>Pencarian arsip</li>
+                    <li>Jam operasional</li>
+                    <li>Persyaratan pengajuan arsip</li>
+                    <li>Dan informasi lainnya</li>
+                </ul>
+                Apa yang bisa saya bantu?
+            </div>
+        </div>
+        
+        <div class="quick-reply">
+            <button class="quick-reply-btn" onclick="sendQuickReply('Jam buka Dinas Kearsipan?')">Jam Buka</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Syarat pengajuan arsip?')">Syarat Pengajuan</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Lokasi Dinas Kearsipan?')">Lokasi</button>
+            <button class="quick-reply-btn" onclick="sendQuickReply('Kontak darurat')">Kontak Darurat</button>
+        </div>
+        
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Ketik pertanyaan Anda..." onkeypress="handleKeyPress(event)">
+            <button id="send-button" onclick="sendMessage()">→</button>
+        </div>
+        
+        <div class="info-text">
+            Layanan resmi Dinas Kearsipan dan Perpustakaan Kabupaten Nganjuk
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk menambahkan pesan ke chat box
+        function addMessage(sender, message) {
+            const chatBox = document.getElementById('chat-box');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            messageDiv.classList.add(sender + '-message');
+            messageDiv.innerHTML = message;
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // Fungsi untuk menampilkan indikator typing
+        function showTypingIndicator() {
+            const chatBox = document.getElementById('chat-box');
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('typing-indicator');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            `;
+            chatBox.appendChild(typingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+        
+        // Fungsi untuk menghilangkan indikator typing
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // Fungsi untuk mengirim pesan
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const message = userInput.value.trim();
+            
+            if (message !== '') {
+                addMessage('user', message);
+                userInput.value = '';
+                
+                // Tampilkan indikator typing
+                showTypingIndicator();
+                
+                // Simulasi delay respon bot
+                setTimeout(() => {
+                    hideTypingIndicator();
+                    const botResponse = generateBotResponse(message);
+                    addMessage('bot', botResponse);
+                }, 1000 + Math.random() * 2000); // Delay acak antara 1-3 detik
+            }
+        }
+        
+        // Fungsi untuk quick reply
+        function sendQuickReply(message) {
+            addMessage('user', message);
+            
+            // Tampilkan indikator typing
+            showTypingIndicator();
+            
+            // Simulasi delay respon bot
+            setTimeout(() => {
+                hideTypingIndicator();
+                const botResponse = generateBotResponse(message);
+                addMessage('bot', botResponse);
+            }, 1000 + Math.random() * 2000);
+        }
+        
+        // Fungsi untuk handle enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // Fungsi untuk menghasilkan respon bot
+        function generateBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            if (lowerMessage.includes('jam') && (lowerMessage.includes('buka') || lowerMessage.includes('operasional'))) {
+                return `Dinas Kearsipan Kabupaten Nganjuk buka:<br>
+                <strong>Senin-Kamis:</strong> 07.30-15.30 WIB<br>
+                <strong>Jumat:</strong> 07.00-14.30 WIB<br>
+                <strong>Sabtu-Minggu:</strong> Tutup<br><br>
+                Untuk layanan perpustakaan arsip:<br>
+                <strong>Senin-Jumat:</strong> 08.00-15.00 WIB`;
+            }
+            else if (lowerMessage.includes('syarat') || lowerMessage.includes('persyaratan')) {
+                return `Persyaratan umum pengajuan arsip:<br>
+                1. Fotokopi KTP pemohon<br>
+                2. Surat permohonan resmi<br>
+                3. Mengisi formulir permintaan arsip<br>
+                4. Membayar biaya administrasi (jika berlaku)<br><br>
+                Untuk persyaratan spesifik, silakan sebutkan jenis arsip yang Anda butuhkan.`;
+            }
+            else if (lowerMessage.includes('lokasi') || lowerMessage.includes('alamat')) {
+                return `Dinas Kearsipan dan Perpustakaan Kabupaten Nganjuk berlokasi di:<br>
+                <strong>Jl. Diponegoro No. 5, Nganjuk, Jawa Timur</strong><br><br>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3955.146346036612!2d111.9034723147753!3d-7.595163994506785!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e784a3b1f64b38d%3A0x2e7b9d3e9f6b3b1e!2sDinas%20Kearsipan%20dan%20Perpustakaan%20Kabupaten%20Nganjuk!5e0!3m2!1sen!2sid!4v1620000000000!5m2!1sen!2sid" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"></iframe>`;
+            }
+            else if (lowerMessage.includes('kontak') || lowerMessage.includes('darurat')) {
+                return `Untuk pertanyaan darurat atau bantuan khusus, silakan hubungi:<br>
+                <strong>☎️ Telepon:</strong> (0358) 32168623268<br>
+                <strong>📱 WhatsApp:</strong> 0812-3456-7890<br>
+                <strong>📧 Email:</strong> arsip@nganjukkab.go.id<br><br>
+                Kami siap membantu Anda dari Senin-Jumat jam 08.00-15.00 WIB.`;
+            }
+            else if (lowerMessage.includes('layanan') || lowerMessage.includes('apa saja')) {
+                return `Dinas Kearsipan Kabupaten Nganjuk menyediakan layanan:<br>
+                1. Konsultasi kearsipan<br>
+                2. Penyimpanan arsip inaktif<br>
+                3. Pelestarian arsip bernilai sejarah<br>
+                4. Layanan referensi arsip<br>
+                5. Digitalisasi dokumen<br>
+                6. Pelatihan pengelolaan arsip<br><br>
+                Mana yang ingin Anda ketahui lebih lanjut?`;
+            }
+            else if (lowerMessage.includes('cari') || lowerMessage.includes('arsip')) {
+                return `Untuk mencari arsip, silakan:<br>
+                1. Kunjungi Dinas Kearsipan Nganjuk<br>
+                2. Isi formulir permintaan pencarian arsip<br>
+                3. Sebutkan detail yang dimiliki (nomor, tahun, jenis dokumen)<br>
+                4. Petugas akan membantu pencarian<br><br>
+                Proses pencarian membutuhkan waktu 3-5 hari kerja. Apakah Anda mencari arsip tertentu?`;
+            }
+            else if (lowerMessage.includes('biaya') || lowerMessage.includes('harga')) {
+                return `Biaya layanan kearsipan:<br>
+                <strong>1. Fotokopi arsip:</strong> Rp500 per halaman<br>
+                <strong>2. Salinan arsip:</strong> Rp15.000 per halaman<br>
+                <strong>3. Legalisasi:</strong> Rp25.000 per dokumen<br>
+                <strong>4. Konsultasi:</strong> Gratis<br><br>
+                *Biaya dapat berubah sesuai peraturan yang berlaku`;
+            }
+            else {
+                return `Maaf, saya belum sepenuhnya memahami pertanyaan Anda. Berikut beberapa informasi yang mungkin Anda butuhkan:<br><br>
+                <strong>Contoh pertanyaan:</strong><br>
+                - Bagaimana cara mengajukan permohonan arsip?<br>
+                - Berapa biaya pengambilan salinan arsip?<br>
+                - Dimana lokasi Dinas Kearsipan Nganjuk?<br><br>
+                Atau Anda bisa menghubungi kami langsung di nomor (0358) 32127372799.`;
+            }
+        }
+    </script>
+</body>
+</html>
